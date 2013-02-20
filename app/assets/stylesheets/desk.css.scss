@@ -1,0 +1,211 @@
+$main-color: #28ac93;
+$desk-color: #71441e;
+$midle: 0 auto;
+$headers-color: #ffffff;
+$anchors-color: #ac3f37;
+
+@mixin rounded-corners($radius){
+  border-radius: $radius;
+  -moz-border-radius: $radius;
+  -webkit-border-radius: $radius;
+}
+@mixin height-width{
+  height: 48px;
+  width: 48px;
+}
+@mixin margin-auto{
+  display: inline-block;
+  margin: 17px 17px;
+}
+.flip {
+    vertical-align:bottom;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #FFF;
+  font-family: verdana;
+  font-size: 14px;
+}
+
+#header {
+  background-color: $main-color;
+  color: #FFF;
+  padding: 4px 100px;
+  border-bottom: solid 5px darken($main-color, 10%);
+  h1{
+    margin: 30px 0;
+    font-size: 30px;
+    color: $headers-color;
+  }
+}
+
+a {
+  color: $anchors-color;
+  text-decoration: none;
+  /*& represents parent element*/
+  &:hover {
+    text-decoration: underline;
+    color: #ac0000;
+  }
+}
+
+.new_game {
+  background-color: $main-color;
+  color: $headers-color;
+  padding: 5px 12px;
+  margin: 10px 0;
+  font-size: 16px;
+  @include rounded-corners(5px);
+  &:hover{
+    color: #e6e6e6;
+    text-decoration: none;
+  }
+}
+
+#container {
+  margin: 0 100px;
+}
+
+.game {
+  border: solid 1px darken($main-color, 10%);
+  margin: 20px 0;
+  padding: 7px 12px;
+  background-color: $main-color;
+  @include rounded-corners(10px);
+  h1{
+    margin: 20px 200px;
+    color: $headers-color;
+  }
+}
+
+.desk{
+  height: 596px;
+  width: 805px;
+  border: solid 25px $desk-color;
+  @include rounded-corners(10px);
+  margin: $midle;
+  background-color: $desk-color;
+  .throw_and_turn{
+      float: left;
+      height: 498px;
+      width: 75px;
+      margin-right: 5px;
+      .throw{
+        height: 74px;
+        width: 74px;
+        margin-top: 50px;
+        border: solid 1px darken($desk-color, 10%);
+        @include rounded-corners(40px);
+        background-color: #b0b431;
+        &:hover{
+          background-color: #ec451b;
+          cursor: pointer;
+        }
+        span{
+          margin-left: 18px;
+          margin-top: 27px;
+          display: inline-block;
+        }
+      }
+    }
+  .game_sidebar{
+    float: right;
+    border-top: solid 50px $desk-color;
+    border-bottom: solid 50px $desk-color;
+    border-left: solid 25px $desk-color;
+    background-color: #c6884f;
+    height: 498px;
+    width: 48px;
+    #first_user_sidebar{
+      border-bottom: solid 12px $desk-color;
+      height: 236px;
+      .checker_home{
+        width: 46px;
+        height: 14px;
+        margin: 1px;
+        background-color: #c5c5c5;
+      }
+    }
+    #second_user_sidebar{
+      border-top: solid 12px $desk-color;
+      height: 236px;
+      .checker_home{
+        width: 46px;
+        height: 14px;
+        background-color: #272822;
+        margin: 1px;
+      }
+    }
+  }
+
+  .middle_top{
+    width: 50px;
+    height: 290px;
+    float: right;
+    background-color: $desk-color;
+  }
+  .middle_bottom{
+    width: 50px;
+    height: 290px;
+    float: left;
+    background-color: $desk-color;
+  }
+
+  .clear_float{
+    clear: both;
+    width: 650px;
+    display: inline-block;
+  }
+
+  .top_desk{
+    float: right;
+    .head{
+      @include height-width;
+      span{
+        @include margin-auto;
+        color: #ecb677;
+      }
+    }
+  }
+
+  .bottom_desk{
+    float: left;
+    .head{
+      @include height-width;
+      span{
+        @include margin-auto;
+        color: #ecb677;
+      }
+    }
+  }
+
+  .fields{
+    border: solid 1px #777;
+    @include rounded-corners(40px);
+    .field{
+      @include height-width;
+      .checker_black{
+        @include rounded-corners(40px);
+        width: 48px;
+        height: 48px;
+        background-color: #272822;
+        &:hover{
+          background-color: #454545;
+          cursor: pointer;
+        }
+      }
+      .checker_white{
+        @include rounded-corners(40px);
+        width: 48px;
+        height: 48px;
+        background-color: #c5c5c5;
+        &:hover{
+          background-color: #dcdcdc;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

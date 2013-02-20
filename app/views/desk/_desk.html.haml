@@ -1,0 +1,62 @@
+%div.game
+    - temp_hash = @checkers.checkers
+    - color = ""
+    %h1
+        = link_to "first_user", "#"
+        = " VS "
+        = link_to "second_user", "#"
+    %dov.clear_float
+    %div.desk
+        %div.throw_and_turn
+            %div.throw
+                %span throw
+        %aside.game_sidebar
+            %div#first_user_sidebar
+                - temp_hash.each do |k, v|
+                    - if /off_game/.match(k) && v == "white"
+                        %div.checker_home
+            %div#second_user_sidebar
+                - temp_hash.each do |k, v|
+                    - if /off_game/.match(k) && v == "black"
+                        %div.checker_home
+        -(1..24).each do |x|
+            - if x%2==0
+                - background_color = "#c5834f" 
+            - else
+                - background_color = "#ebb678" 
+            - if x < 13
+                %div.top_desk
+                    %div.head
+                        %span= x
+                    %div{class: "fields", style: "background-color: #{background_color}; border-color: #{background_color};"}
+                        -(1..5).each do |nested|
+                            %div{class: "field", id: "#{x}/#{nested}"}
+                                - if temp_hash.has_key?("#{x}/#{nested}")
+                                    - color = temp_hash["#{x}/#{nested}"]
+                                    %div{:class => "checker_#{color}", :id => "#{x}/#{nested}"}
+                - if x == 6
+                    %div.middle_top
+            - if x == 12
+                %dov.clear_float
+            - if x > 12 && x <= 24
+                %div.bottom_desk
+                    %div{class: "fields", style: "background-color: #{background_color}; border-color: #{background_color};"}
+                        - nested = 5
+                        - 5.times do
+                            %div{class: "field", id: "#{x}/#{nested}"}
+                                - if temp_hash.has_key?("#{x}/#{nested}")
+                                    - color = temp_hash["#{x}/#{nested}"]
+                                    %div{:class => "checker_#{color}", :id => "#{x}/#{nested}"}
+                                - nested = nested - 1
+                    %div.head
+                        %span= x
+                - if x == 18
+                    %div.middle_bottom
+            - if x == 25
+                %dov.clear_float
+    = link_to "live Game", "#", :confirm => "Are you sure?" 
+    = " | "
+    = link_to "Pouse", "#"
+    = form_tag(:controller => "desk", :action => "move", :method => "post", :id => "hidden_form") do
+        = hidden_field_tag(:id, @checkers.id, :id => "id_for_hidden")
+

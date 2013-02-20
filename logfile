@@ -1,0 +1,14 @@
+LOG:  database system was shut down at 2013-02-16 03:19:27 EET
+LOG:  autovacuum launcher started
+LOG:  database system is ready to accept connections
+ERROR:  Syntax error near '1' at position 4
+STATEMENT:  INSERT INTO "checkers" ("checkers", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"
+FATAL:  database "app_name_development" does not exist
+FATAL:  database "app_name_test" does not exist
+FATAL:  database "app_name_production" does not exist
+LOG:  database system was interrupted; last known up at 2013-02-17 23:23:55 EET
+LOG:  database system was not properly shut down; automatic recovery in progress
+LOG:  record with zero length at 0/1F6D768
+LOG:  redo is not required
+LOG:  database system is ready to accept connections
+LOG:  autovacuum launcher started
