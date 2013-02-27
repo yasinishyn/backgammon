@@ -53,7 +53,7 @@ class DeskController < ApplicationController
     else
       flash[:notice] = "It is not yout turn or your move is over"
     end
-    if @desk.moves == 0
+    if @desk.moves <= 0
       if @desk.turn == User.find_by_id(@desk.second_player_id).username
         @desk.turn = User.find_by_id(@desk.first_player_id).username
         flash[:notice] = "#{@desk.turn} throw the dices"
@@ -100,7 +100,7 @@ class DeskController < ApplicationController
         #user_id
         #check whether he has the permission to throw
         if @desk.turn == current_user.username
-          @desk.dice.dices = @desk.dice.throw_the_dice
+          @desk.dice.dices = @desk.dice.throw_the_dice if @desk.moves == 0
           @dice = @desk.dice
           @dice.save
           @desk.moves = @desk.dice.dices.length #must be accompanied with notification...

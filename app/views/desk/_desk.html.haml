@@ -15,6 +15,7 @@
             = second_user.username
         - else
             = "Waiting for second player"
+    = "#{@desk.turn} has #{@desk.moves} moves" if @desk.moves != 0
     %dov.clear_float
     %div.desk
         %div.throw_and_turn
@@ -79,6 +80,5 @@
         = hidden_field_tag(:first_player_id, @desk.first_player_id, id: "first_player_id")
         = hidden_field_tag(:second_player_id, @desk.second_player_id, id: "second_player_id")
         = hidden_field_tag(:turn, @desk.turn, id: "turn")
-    = @desk.moves
-    = @desk.turn
+    
 

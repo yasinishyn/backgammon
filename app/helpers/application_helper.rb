@@ -116,8 +116,24 @@ module ApplicationHelper
       #generate truly unique key
       to = "#{from}_#{temp}_#{to}"
     end
-    checkers_hash.merge!({"#{to}"=>"#{color}"}) if checkers_hash.delete(from)
-    @desk.moves -= count
+    # if we have 2/3 as to then concatanate srings 2 + / then evaluate it to integer => 2, then evaluate it to string to concatanate with /
+    # if we have 12/3 then "12".to_i => 12 to_s "12" + "/" = "12/". Magic :)
+    field =  ((to[0] + to[1]).to_i).to_s + '/'
+    position = 1
+    color_count = 0
+    checkers_hash.each do |current_field, current_color|
+      if current_field.match(/^#{field}/)
+        position += 1 
+        color_count += 1 if current_color != color 
+      end
+    end
+    if color_count <= 1
+      checkers_hash.merge!({"#{field}#{position}"=>"#{color}"}) if checkers_hash.delete(from)
+      @desk.moves -= count
+    else
+      return "You can put your checker only on empty field, or on field where is only one oposite checker!!"
+    end
+    
   end
 
 end
