@@ -1,8 +1,5 @@
+= subscribe_to "/desk/move"
+= subscribe_to "/desk/throw_d"
 %div#games
 	= render "desk"	
 = link_to 'Start New Game', "#", :class => "new_game"
-- @checkers.checkers.each do |k, v|
-	= k
-	= " \ "
-	= v
-	%br

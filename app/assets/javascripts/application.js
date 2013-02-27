@@ -17,6 +17,7 @@
 //= require jquery.ui.resizable
 //= require jquery.ui.selectable
 //= require jquery.ui.sortable
+//= require private_pub
 //= require_tree .
 
 $(document).on("mouseover", function(){
@@ -40,5 +41,10 @@ $(document).on("mouseover", function(){
 
 		$.post("/desk/move", {id: $('#id_for_hidden').val(), from: from, to: to}, null, "script");
 	}});
+});
+$(document).on("click", ".throw", function(){
+	$.post("/desk/throw_d", {id: $('#id_for_hidden').val()}, null, "script");
+});
 
-})
+	
+

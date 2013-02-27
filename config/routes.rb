@@ -1,11 +1,14 @@
 AppName::Application.routes.draw do
+  devise_for :users
+
   get "desk/show"
+  get "desk/join"
   get "desk/new"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
-  # Sample of regular route:
+  # Sample of regular route: 
   #   match 'products/:id' => 'catalog#view'
   # Keep in mind you can assign values other than :controller and :action
 
@@ -51,7 +54,7 @@ AppName::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  root :to => 'desk#show'
+  root :to => 'desk#index'
 
   # See how all your routes lay out with "rake routes"
 

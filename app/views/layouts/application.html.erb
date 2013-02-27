@@ -8,9 +8,24 @@
 </head>
 <body>
 
-<div id="header">
-  <h1>Backgammon Short</h1>
-</div>
+<header id="header">
+  <%= link_to(root_path) do %>
+    <h1>Backgammon</h1>
+  <% end %>
+  <nav>
+  		<% if user_signed_in? %>
+  			<p><%= link_to "Sign-Out", destroy_user_session_path, :method => "delete"%></p>
+  			<p><%= link_to "Edit my profile", edit_user_registration_path %></p>
+  			<p>messages(<%=3%>)</p>
+  			<p>active Games (<%=2%>)</p>
+  		<% else %>
+  		    <p><%= link_to "Sign-Up", new_user_registration_path %></p>
+  		    <p><%= link_to "Sign-In", new_user_session_path %></p>
+  		<% end %>
+  	<div class="clear_float"></div>
+  </nav>
+  <div class="clear_float"></div>
+</header>
 <div id="container">
   <%= yield %>
 </div>

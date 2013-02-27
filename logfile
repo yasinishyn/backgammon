@@ -12,3 +12,50 @@ LOG:  record with zero length at 0/1F6D768
 LOG:  redo is not required
 LOG:  database system is ready to accept connections
 LOG:  autovacuum launcher started
+FATAL:  database "app_name_development" does not exist
+FATAL:  database "app_name_test" does not exist
+FATAL:  database "app_name_production" does not exist
+ERROR:  relation "desks" does not exist at character 315
+STATEMENT:              SELECT a.attname, format_type(a.atttypid, a.atttypmod),
+	                     pg_get_expr(d.adbin, d.adrelid), a.attnotnull, a.atttypid, a.atttypmod
+	              FROM pg_attribute a LEFT JOIN pg_attrdef d
+	                ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+	             WHERE a.attrelid = '"desks"'::regclass
+	               AND a.attnum > 0 AND NOT a.attisdropped
+	             ORDER BY a.attnum
+	
+FATAL:  database "app_name_development" does not exist
+FATAL:  database "app_name_test" does not exist
+FATAL:  database "app_name_production" does not exist
+FATAL:  database "app_name_development" does not exist
+FATAL:  database "app_name_test" does not exist
+FATAL:  database "app_name_production" does not exist
+ERROR:  column desks.second_player_id does not exist at character 38
+STATEMENT:  SELECT "desks".* FROM "desks"  WHERE "desks"."second_player_id" IS NULL
+ERROR:  column desks.second_player_id does not exist at character 38
+STATEMENT:  SELECT "desks".* FROM "desks"  WHERE "desks"."second_player_id" IS NULL
+ERROR:  column desks.second_player_id does not exist at character 38
+STATEMENT:  SELECT "desks".* FROM "desks"  WHERE "desks"."second_player_id" IS NULL
+ERROR:  column desks.second_player_id does not exist at character 38
+STATEMENT:  SELECT "desks".* FROM "desks"  WHERE "desks"."second_player_id" IS NULL
+ERROR:  column desks.second_player_id does not exist at character 38
+STATEMENT:  SELECT "desks".* FROM "desks"  WHERE "desks"."second_player_id" IS NULL
+ERROR:  column desks.second_player_id does not exist at character 38
+STATEMENT:  SELECT "desks".* FROM "desks"  WHERE "desks"."second_player_id" IS NULL
+FATAL:  database "app_name_development" does not exist
+FATAL:  database "app_name_test" does not exist
+FATAL:  database "app_name_production" does not exist
+LOG:  database system was interrupted; last known up at 2013-02-23 11:58:57 EET
+LOG:  database system was not properly shut down; automatic recovery in progress
+LOG:  record with zero length at 0/23240B8
+LOG:  redo is not required
+LOG:  autovacuum launcher started
+LOG:  database system is ready to accept connections
+FATAL:  database "app_name_development" does not exist
+FATAL:  database "app_name_test" does not exist
+FATAL:  database "app_name_production" does not exist
+FATAL:  database "app_name_development" does not exist
+FATAL:  database "app_name_test" does not exist
+FATAL:  database "app_name_production" does not exist
+ERROR:  relation "checkers" does not exist
+STATEMENT:  CREATE INDEX dices_dice ON checkers USING GIN(dices)

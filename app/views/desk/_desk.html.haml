@@ -1,15 +1,31 @@
 %div.game
-    - temp_hash = @checkers.checkers
+    - flash.each do |name, msg|
+        - if msg.is_a?(String)
+            %div{:class => "alert alert-#{name == :notice ? "success" : "error"}"}
+                %a.close{"data-dismiss" => "alert"} ×
+                = content_tag :div, msg, :id => "flash_#{name}"
+    - temp_hash = @desk.checkers
     - color = ""
     %h1
-        = link_to "first_user", "#"
+        - first_user = User.where(id: @desk.first_player_id).first
+        - second_user = User.where(id: @desk.second_player_id).first
+        = first_user.username
         = " VS "
-        = link_to "second_user", "#"
+        - if second_user
+            = second_user.username
+        - else
+            = "Waiting for second player"
     %dov.clear_float
     %div.desk
         %div.throw_and_turn
             %div.throw
                 %span throw
+            %div.dice_res
+                - if @desk.dice.dices
+                    - @desk.dice.dices.each do |k, dice|
+                        -# scip [0] element because it is nil
+                        - next unless dice
+                        = image_tag "#{dice}.png"
         %aside.game_sidebar
             %div#first_user_sidebar
                 - temp_hash.each do |k, v|
@@ -56,7 +72,13 @@
                 %dov.clear_float
     = link_to "live Game", "#", :confirm => "Are you sure?" 
     = " | "
-    = link_to "Pouse", "#"
+    = link_to "Pause", "#"
+    -# hidden fields for js/ruby validations, and ajax requests
     = form_tag(:controller => "desk", :action => "move", :method => "post", :id => "hidden_form") do
-        = hidden_field_tag(:id, @checkers.id, :id => "id_for_hidden")
+        = hidden_field_tag(:id, @desk.id, :id => "id_for_hidden")
+        = hidden_field_tag(:first_player_id, @desk.first_player_id, id: "first_player_id")
+        = hidden_field_tag(:second_player_id, @desk.second_player_id, id: "second_player_id")
+        = hidden_field_tag(:turn, @desk.turn, id: "turn")
+    = @desk.moves
+    = @desk.turn
 

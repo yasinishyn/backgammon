@@ -23,6 +23,10 @@ end
 
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
+gem 'devise'
+gem "faye-rails", "~> 1.0.6"
+gem "private_pub"
+gem "thin"
 
 group :development do
 	gem 'better_errors'
