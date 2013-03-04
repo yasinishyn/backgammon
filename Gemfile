@@ -7,6 +7,7 @@ gem 'rails', '3.2.11'
 
 gem 'pg'
 gem 'activerecord-postgres-hstore'
+gem 'neat'
 
 
 # Gems used only for assets and not required
