@@ -64,6 +64,10 @@ module ApplicationHelper
       #currently it is a string. t prefixe means temp
       t_from = from[0] + from[1]
       t_from = t_from.to_i
+      if from.match(/middle/)
+        t_from = 1 if color == "black"
+        t_from = 24 if color == "white"
+      end
       t_to = to[0] + to[1]
       t_to = t_to.to_i
       sum_rights = 0
@@ -72,24 +76,26 @@ module ApplicationHelper
           rights[k] = v.to_i
         end
       if color == "white"
-        t_to = 0 if to == "off_game" 
-        if t_from-t_to == rights["1"]
+        if to == "off_game" 
+          return move_to_home_field(checkers_hash, to, from, rights) if home_checked(checkers_hash, color)
+        elsif t_from - t_to == rights["1"]
           return move_helper(checkers_hash, to, from, 1)
-        elsif t_from-t_to ==  rights["2"]
+        elsif t_from - t_to ==  rights["2"]
           return move_helper(checkers_hash, to, from, 1)
-        elsif t_from-t_to == rights["3"]
+        elsif t_from - t_to == rights["3"]
           return move_helper(checkers_hash, to, from, 1)
-        elsif t_from-t_to == rights["4"]
+        elsif t_from - t_to == rights["4"]
           return move_helper(checkers_hash, to, from, 1)
-        elsif t_from-t_to ==  sum_rights
+        elsif t_from - t_to ==  sum_rights
           return move_helper(checkers_hash, to, from, rights.length)
         else
           return "You can move checker there #{t_from-t_to}"
         end
       #Black move formula Pto - Pfrom == ~rights
       elsif color == "black" 
-        t_to = 25 if to == "off_game"
-        if t_to - t_from == rights["1"]
+        if to == "off_game"
+          return move_to_home_field(checkers_hash, to, from, rights) if home_checked(checkers_hash, color)
+        elsif t_to - t_from == rights["1"]
           return move_helper(checkers_hash, to, from, 1)
         elsif t_to - t_from == rights["2"]
           return move_helper(checkers_hash, to, from, 1)
@@ -111,29 +117,105 @@ module ApplicationHelper
   def move_helper (checkers_hash, to, from, count)
     # resive color value by key
     color = checkers_hash[from] 
+    temp = rand(100) + rand(100) * rand(4) + rand(10)
     if to == "off_game" 
-      temp = rand(100) + rand(100) * rand(4) + rand(10)
       #generate truly unique key
       to = "#{from}_#{temp}_#{to}"
-    end
-    # if we have 2/3 as to then concatanate srings 2 + / then evaluate it to integer => 2, then evaluate it to string to concatanate with /
-    # if we have 12/3 then "12".to_i => 12 to_s "12" + "/" = "12/". Magic :)
-    field =  ((to[0] + to[1]).to_i).to_s + '/'
-    position = 1
-    color_count = 0
-    checkers_hash.each do |current_field, current_color|
-      if current_field.match(/^#{field}/)
-        position += 1 
-        color_count += 1 if current_color != color 
-      end
-    end
-    if color_count <= 1
-      checkers_hash.merge!({"#{field}#{position}"=>"#{color}"}) if checkers_hash.delete(from)
+      checkers_hash.merge!({"#{to}"=>"#{color}"}) if checkers_hash.delete(from)
       @desk.moves -= count
     else
-      return "You can put your checker only on empty field, or on field where is only one oposite checker!!"
+      # if we have 2/3 as to then concatanate srings 2 + / then evaluate it to integer => 2, then evaluate it to string to concatanate with /
+      # if we have 12/3 then "12".to_i => 12 to_s "12" + "/" = "12/". Magic :)
+      field =  ((to[0] + to[1]).to_i).to_s + '/'
+      position = 1
+      color_count = 0
+      oposite_color = ""
+      checkers_hash.each do |current_field, current_color|
+        if current_field.match(/^#{field}/)
+          position += 1 
+          if current_color != color 
+            color_count += 1 
+            oposite_color = current_color
+          end
+        end
+      end
+      if color_count <= 1
+        if color_count < 1
+          checkers_hash.merge!({"#{field}#{position}"=>"#{color}"}) if checkers_hash.delete(from)
+          @desk.moves -= count
+        elsif color_count == 1
+          position -= 1
+          checkers_hash.merge!({"middle_#{temp}"=>"#{oposite_color}"}) if checkers_hash.delete("#{field}#{position}")
+          checkers_hash.merge!({"#{field}#{position}"=>"#{color}"}) if checkers_hash.delete(from)
+          @desk.moves -= count
+        end
+      else
+        return "You can put your checker only on empty field, or on field where is only one oposite checker!!"
+      end
+    end 
+  end
+
+  def home_checked(checkers_hash, color)
+    temp = true
+    if color == "black"
+      checkers_hash.each do |k, v|
+        if (19..24).member?((k[0] + k[1]).to_i)
+          temp = false if v != color
+        elsif (1..18).member?((k[0] + k[1]).to_i)
+          temp = false if v == color
+        end
+      end
+    elsif color == "white"
+      checkers_hash.each do |k, v|
+        if (1..6).member?((k[0] + k[1]).to_i)
+          temp = false if v != color
+        elsif (7..24).member?((k[0] + k[1]).to_i)
+          temp = false if v == color
+        end
+      end
     end
-    
+    return temp
+  end
+
+  def move_to_home_field(checkers_hash, to, from, rights)
+    t_from = from[0] + from[1]
+    t_from = t_from.to_i
+    sum_rights = 0
+      rights.each do |k, v|
+        sum_rights += v.to_i
+        rights[k] = v.to_i
+      end
+    color = checkers_hash[from] 
+    t_to = color == "white" ? 0 : 25
+    if color == "white"
+      if t_from - t_to <= rights["1"]
+        return move_helper(checkers_hash, to, from, 1)
+      elsif t_from - t_to <=  rights["2"]
+        return move_helper(checkers_hash, to, from, 1)
+      elsif t_from - t_to <= rights["3"]
+        return move_helper(checkers_hash, to, from, 1)
+      elsif t_from - t_to <= rights["4"]
+        return move_helper(checkers_hash, to, from, 1)
+      elsif t_from - t_to <=  sum_rights
+        return move_helper(checkers_hash, to, from, rights.length)
+      else
+        return "You can move checker there #{t_from-t_to}"
+      end
+    elsif color == "black" 
+      if t_to - t_from <= rights["1"]
+        return move_helper(checkers_hash, to, from, 1)
+      elsif t_to - t_from <= rights["2"]
+        return move_helper(checkers_hash, to, from, 1)
+      elsif t_to - t_from <= rights["3"]
+        return move_helper(checkers_hash, to, from, 1)
+      elsif t_to - t_from <= rights["4"]
+        return move_helper(checkers_hash, to, from, 1)
+      elsif t_to - t_from <= sum_rights
+        return move_helper(checkers_hash, to, from, rights.length)
+      else
+        return "You can move checker there#{t_to} - #{t_from} - #{rights}"
+      end
+    end
   end
 
 end

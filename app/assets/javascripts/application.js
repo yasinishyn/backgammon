@@ -22,6 +22,8 @@
 
 $(document).on("mouseover", function(){
 	$('.field>div').draggable({containment: '.desk', snap: ".field", snapMode: "inner" , cursor: "move", cursorAt: { top: 24, left: 24 } });
+	$('.middle_top>div').draggable({containment: '.desk', snap: ".field", snapMode: "inner" , cursor: "move", cursorAt: { top: 24, left: 24 } });
+	$('.middle_bottom>div').draggable({containment: '.desk', snap: ".field", snapMode: "inner" , cursor: "move", cursorAt: { top: 24, left: 24 } });
 
 	// in game 
 	$('.field').droppable({ drop: function(event, ui){
@@ -44,6 +46,9 @@ $(document).on("mouseover", function(){
 });
 $(document).on("click", ".throw", function(){
 	$.post("/desk/throw_d", {id: $('#id_for_hidden').val()}, null, "script");
+});
+$(document).on("click", ".skip", function(){
+	$.post("/desk/skip_move", {id: $('#id_for_hidden').val()}, null, "script");
 });
 
 	

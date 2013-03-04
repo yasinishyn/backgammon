@@ -20,13 +20,15 @@
     %div.desk
         %div.throw_and_turn
             %div.throw
-                %span throw
+                %span Throw
             %div.dice_res
                 - if @desk.dice.dices
                     - @desk.dice.dices.each do |k, dice|
                         -# scip [0] element because it is nil
                         - next unless dice
                         = image_tag "#{dice}.png"
+            %div.skip
+                %span Skip
         %aside.game_sidebar
             %div#first_user_sidebar
                 - temp_hash.each do |k, v|
@@ -46,29 +48,62 @@
                     %div.head
                         %span= x
                     %div{class: "fields", style: "background-color: #{background_color}; border-color: #{background_color};"}
+                        - checkers_count = 0
+                        - temp_hash.each do |current_field, current_color|
+                            - checkers_count += 1  if current_field.match(/^#{x}\//)
                         -(1..5).each do |nested|
                             %div{class: "field", id: "#{x}/#{nested}"}
                                 - if temp_hash.has_key?("#{x}/#{nested}")
                                     - color = temp_hash["#{x}/#{nested}"]
                                     %div{:class => "checker_#{color}", :id => "#{x}/#{nested}"}
+                                - elsif nested == 5
+                                    - (6..15).each do |out_nested|
+                                        - if temp_hash.has_key?("#{x}/#{out_nested}")
+                                            - color = temp_hash["#{x}/#{out_nested}"]
+                                            %div{:class => "checker_#{color}", :id => "#{x}/#{out_nested}"}
+                                                %span= checkers_count
                 - if x == 6
                     %div.middle_top
+                        - checkers_count = 0
+                        - color = "white"
+                        - temp_hash.each do |k, v|
+                            - if v == color && k.match(/middle/)
+                                - checkers_count += 1
+                                %div{:class => "checker_#{color}", :id => "#{k}", :style=> "position: none;"}
+                                    %span= checkers_count
             - if x == 12
                 %dov.clear_float
             - if x > 12 && x <= 24
                 %div.bottom_desk
                     %div{class: "fields", style: "background-color: #{background_color}; border-color: #{background_color};"}
+                        - checkers_count = 0
+                        - temp_hash.each do |current_field, current_color|
+                            - checkers_count += 1  if current_field.match(/^#{x}\//)
                         - nested = 5
                         - 5.times do
+                            - if nested == 5
+                                - (6..15).each do |out_nested|
+                                    - if temp_hash.has_key?("#{x}/#{out_nested}")
+                                        - color = temp_hash["#{x}/#{out_nested}"]
+                                        %div{:class => "checker_#{color}", :id => "#{x}/#{out_nested}"}
                             %div{class: "field", id: "#{x}/#{nested}"}
                                 - if temp_hash.has_key?("#{x}/#{nested}")
                                     - color = temp_hash["#{x}/#{nested}"]
                                     %div{:class => "checker_#{color}", :id => "#{x}/#{nested}"}
+                                        %span
+                                            = checkers_count if nested > 5
                                 - nested = nested - 1
                     %div.head
                         %span= x
                 - if x == 18
                     %div.middle_bottom
+                        - checkers_count = 0
+                        - color = "black"
+                        - temp_hash.each do |k, v|
+                            - if v == color && k.match(/middle/)
+                                - checkers_count += 1
+                                %div{:class => "checker_#{color}", :id => "#{k}"}
+                                    %span= checkers_count
             - if x == 25
                 %dov.clear_float
     = link_to "live Game", "#", :confirm => "Are you sure?" 

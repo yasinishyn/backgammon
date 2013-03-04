@@ -59,3 +59,17 @@ FATAL:  database "app_name_test" does not exist
 FATAL:  database "app_name_production" does not exist
 ERROR:  relation "checkers" does not exist
 STATEMENT:  CREATE INDEX dices_dice ON checkers USING GIN(dices)
+FATAL:  terminating connection due to administrator command
+LOG:  autovacuum launcher shutting down
+LOG:  received smart shutdown request
+LOG:  shutting down
+LOG:  database system is shut down
+LOG:  database system was shut down at 2013-02-27 15:52:06 EET
+LOG:  autovacuum launcher started
+LOG:  database system is ready to accept connections
+LOG:  database system was interrupted; last known up at 2013-03-03 21:01:41 EET
+LOG:  database system was not properly shut down; automatic recovery in progress
+LOG:  record with zero length at 0/292A958
+LOG:  redo is not required
+LOG:  autovacuum launcher started
+LOG:  database system is ready to accept connections

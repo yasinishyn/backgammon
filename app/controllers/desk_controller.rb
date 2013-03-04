@@ -39,28 +39,32 @@ class DeskController < ApplicationController
     id = params["id"]
     @desk = Desk.find(params[:id].to_i)
     temp = 0
-    if @desk.moves != 0 && @desk.turn == current_user.username
-      if current_user.id == @desk.first_player_id
-        temp = move_checker(@desk.checkers, params[:from], params[:to], @desk.dice.dices, "white")  #add notification about color
-      else
-        temp = move_checker(@desk.checkers, params[:from], params[:to], @desk.dice.dices, "black") #not.....
+    if @desk.moves
+      if @desk.moves != 0 && @desk.turn == current_user.username
+        if current_user.id == @desk.first_player_id
+          temp = move_checker(@desk.checkers, params[:from], params[:to], @desk.dice.dices, "white")  #add notification about color
+        else
+          temp = move_checker(@desk.checkers, params[:from], params[:to], @desk.dice.dices, "black") #not.....
+        end
+        if temp.is_a? Hash
+          @desk.checkers = temp
+        elsif temp.is_a? String
+          flash[:error] = temp
+        end
       end
-      if temp.is_a? Hash
-        @desk.checkers = temp
-      elsif temp.is_a? String
-        flash[:error] = temp
+      if @desk.moves <= 0
+        if @desk.turn == User.find_by_id(@desk.second_player_id).username
+          @desk.turn = User.find_by_id(@desk.first_player_id).username
+          flash[:notice] = "#{@desk.turn} throw the dices"
+          @desk.moves = nil
+        else
+          @desk.turn = User.find_by_id(@desk.second_player_id).username
+          flash[:notice] = "#{@desk.turn} throw the dices"
+          @desk.moves = nil
+        end
       end
     else
-      flash[:notice] = "It is not yout turn or your move is over"
-    end
-    if @desk.moves <= 0
-      if @desk.turn == User.find_by_id(@desk.second_player_id).username
-        @desk.turn = User.find_by_id(@desk.first_player_id).username
-        flash[:notice] = "#{@desk.turn} throw the dices"
-      else
-        @desk.turn = User.find_by_id(@desk.second_player_id).username
-        flash[:notice] = "#{@desk.turn} throw the dices"
-      end
+      flash[:notice] = "Click on 'Throw'"
     end
     respond_to do |format|
       if @desk.save
@@ -100,7 +104,7 @@ class DeskController < ApplicationController
         #user_id
         #check whether he has the permission to throw
         if @desk.turn == current_user.username
-          @desk.dice.dices = @desk.dice.throw_the_dice if @desk.moves == 0
+          @desk.dice.dices = @desk.dice.throw_the_dice unless @desk.moves
           @dice = @desk.dice
           @dice.save
           @desk.moves = @desk.dice.dices.length #must be accompanied with notification...
@@ -115,6 +119,31 @@ class DeskController < ApplicationController
       flash[:notice] = "Please wait second player to connect the game"
       # dont make any changes
       #notification.........
+    end
+    respond_to do |format|
+      if @desk.save
+        format.html {redirect_to :action => "show", :id => @desk.id}
+        format.js
+      else
+        #....
+      end
+    end
+  end
+
+  def skip_move
+    @desk = Desk.find(params[:id].to_i)
+    if @desk.turn == current_user.username
+      if @desk.turn == User.find_by_id(@desk.second_player_id).username
+        @desk.turn = User.find_by_id(@desk.first_player_id).username
+        flash[:notice] = "#{@desk.turn} throw the dices"  
+        @desk.moves = nil
+      else
+        @desk.turn = User.find_by_id(@desk.second_player_id).username
+        flash[:notice] = "#{@desk.turn} throw the dices"
+        @desk.moves = nil
+      end
+    else
+      flash[:notice] = "#{current_user.username} plece dont cheat!"
     end
     respond_to do |format|
       if @desk.save
