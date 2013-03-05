@@ -4,6 +4,8 @@ gem 'rails', '3.2.11'
 
 gem 'pg'
 gem 'activerecord-postgres-hstore'
+gem 'heroku'
+gem 'private_pub'
 
 group :assets do
   gem 'sass-rails'
